@@ -178,13 +178,31 @@ func editCustomerProcess(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 	}
 
+	txn, err1 := db.Begin()
+	if err1 != nil {
+		return
+	}
+
+	defer func() {
+		// Rollback in case of Failure
+		if r := recover(); r != nil {
+			txn.Rollback()
+		}
+	}()
+
 	// insert values
-	_, err := db.Exec("UPDATE Customers SET first_name=$1, last_name=$2, birth_date=$3, gender=$4, email=$5, address=$6 WHERE ID=$7",
+	_, err := txn.Exec("UPDATE Customers SET first_name=$1, last_name=$2, birth_date=$3, gender=$4, email=$5, address=$6 WHERE ID=$7",
 		customer.FirstName, customer.LastName, customer.BirthDate, customer.Gender, customer.Email, customer.Address, customer.ID)
 	if err != nil {
+		txn.Rollback()
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
-
 		return
+	}
+
+	// Commit
+	err1 = txn.Commit()
+	if err1 != nil {
+		log.Fatal(err1)
 	}
 
 	// confirm insertion
@@ -212,32 +230,13 @@ func createCustomerProcess(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 	}
 
-	txn, err1 := db.Begin()
-	if err1 != nil {
-		return
-	}
-
-	defer func() {
-		// Rollback in case of Failure
-		if r := recover(); r != nil {
-			txn.Rollback()
-		}
-	}()
-
 	// insert values
-	_, err := txn.Exec("INSERT INTO Customers(first_name, last_name, birth_date, gender, email, address)  VALUES ($1, $2, $3, $4, $5, $6)",
+	_, err := db.Exec("INSERT INTO Customers(first_name, last_name, birth_date, gender, email, address)  VALUES ($1, $2, $3, $4, $5, $6)",
 		customer.FirstName, customer.LastName, customer.BirthDate, customer.Gender, customer.Email, customer.Address)
 
 	if err != nil {
-		txn.Rollback()
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
-	}
-
-	// Commit
-	err1 = txn.Commit()
-	if err1 != nil {
-		log.Fatal(err1)
 	}
 
 	// confirm insertion
