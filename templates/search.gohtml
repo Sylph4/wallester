@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search result</title>
+    <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js" type="text/javascript"></script>
+    <style>
+        html, body {
+            padding: 0;
+            border: 0;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            width: 30vw;
+            font-size: 2rem;
+            color: black;
+            border: 1px solid black;
+        }
+
+        button {
+            width: 8vw;
+            font-size: 1rem;
+            color: black;
+            border: 1px solid black;
+        }
+
+        table.sortable td, table.sortable th {
+            padding: 10px;
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 5px;
+        }
+
+        table.sortable thead {
+            background-color:#eee;
+            color:#666666;
+            font-weight: bold;
+            cursor: default;
+        }
+
+    </style>
+</head>
+<body>
+
+<form method="get" action="/search">
+    <label for="customersearch">Search customer (by first and last name):</label>
+    <input type="text" name="page" value="1" hidden>
+    <input type="search" id="search" name="parameter">
+    <button type="submit">Submit</button>
+</form>
+<p class="link"><a href="/customers">Go back</a></p>
+<h1>Search result</h1>
+
+<table class="sortable">
+    <thead>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Gender</th>
+        <th>BirthDate</th>
+        <th>Email</th>
+        <th>Address</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Customers}}
+        <tr>
+            <td><a href="/editcustomer?id={{.ID}}">{{.FirstName}}</a></td>
+            <td>{{.LastName}}</td>
+            <td>{{.Gender}}</td>
+            <td>{{.BirthDate}}</td>
+            <td>{{.Email}}</td>
+            <td>{{.Address}}</td>
+        </tr>
+
+    {{end}}
+    <tbody>
+</table>
+
+<table>
+    <tr>
+        {{range .Pages}}
+            <th><a href="/search?page={{.}}&parameter={{$.SearchParameter}}">{{.}}</a></th>
+        {{end}}
+    </tr>
+</table>
+</body>
+</html>

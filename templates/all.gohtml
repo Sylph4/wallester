@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All customers</title>
+    <style>
+        html, body {
+            padding: 0;
+            border: 0;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            width: 30vw;
+            font-size: 2rem;
+            color: black;
+            border: 1px solid black;
+        }
+        button{
+            width: 8vw;
+            font-size: 2rem;
+            color: black;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<form method="get" action="/search">
+    <label for="customersearch">Search customer (by first and last name):</label>
+    <input type="text" name="page" value="1" hidden>
+    <input type="search" id="search" name="parameter">
+    <button type="submit">Submit</button>
+</form>
+
+
+<p class="link"><a href="/createcustomer">Create customer</a></p>
+<h1>All customers</h1>
+
+{{range .}}
+    <p><a href="/editcustomer?id={{.ID}}">{{.FirstName}} {{.LastName}}</a>  - {{.Gender}} - {{.Email}} - {{.BirthDate}}- {{.Address}}</p>
+{{end}}
+
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create customer</title>
+    <style>
+        html, body {
+            padding: 0;
+            border: 0;
+            margin: 0;
+        }
+
+        body, form {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+        input, select {
+            width: 30vw;
+            font-size: 2rem;
+            color: black;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Create customer</h1>
+<form method="post" action="/createcustomerprocess">
+    <input type="text" name="firstName" placeholder="First Name" required autofocus>
+    <input type="text" name="lastName" placeholder="Last Name" required>
+    <input type="date" name="birthDate" placeholder="Birth Date" required>
+
+    <select name="gender" id="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+
+    <input type="text" name="email" placeholder="Email" required>
+    <input type="text" name="address" placeholder="Address" required>
+    <input type="submit" value="Create">
+</form>
+
+</body>
+</html>
